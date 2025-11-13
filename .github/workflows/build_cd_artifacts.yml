@@ -12,6 +12,11 @@ jobs:
     env:
       GRADLE_ARGS: -Partifactory_user=${{secrets.ARTIFACTORY_USER}} -Partifactory_password=${{secrets.ARTIFACTORY_TOKEN}}
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
       - name: checkout code
         uses: actions/checkout@v2
 
@@ -34,11 +39,11 @@ jobs:
           path: build/distributions
 
       - name: install JFrog CLI
-        uses: jfrog/setup-jfrog-cli@v1
+        uses: jfrog/setup-jfrog-cli@686845529f661c9afbbee4547baa1f6d2d7ce5e0 # v1.2.1
 
       - name: generate variables
         id: variables
-        uses: armory-io/astrolabe-build-defaults@main
+        uses: armory-io/astrolabe-build-defaults@c31d5d38c54920da01ec1cf9231e8df957603b9a # main
 
       - name: build docker image
         id: build-docker-image

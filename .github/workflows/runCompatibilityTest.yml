@@ -9,6 +9,11 @@ jobs:
     name: Compatibility test for service:${{ github.event.client_payload.service }} version:${{ github.event.client_payload.version }} pluginSha:${{ github.event.client_payload.sha }}
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
       - name: checkout code
         uses: actions/checkout@v2
         with:
@@ -25,7 +30,7 @@ jobs:
           cache: 'gradle'
 
       - name: run tests
-        uses: armory-io/plugin-test-runner@main
+        uses: armory-io/plugin-test-runner@a2340cc9cf88bffe55484e072d6ca845fd204d82 # main
         env:
           ORG_GRADLE_PROJECT_artifactory_user: ${{ secrets.ARTIFACTORY_USER }}
           ORG_GRADLE_PROJECT_artifactory_password: ${{ secrets.ARTIFACTORY_TOKEN }}
